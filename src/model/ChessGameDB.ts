@@ -15,8 +15,10 @@ export interface IChessGame extends mongoose.Document {
 }
 
 export const ChessGameSchema = new mongoose.Schema({
+  code: { type: String, required: true },
+  start: { type: Date, required: true },
   data: { type: String, required: true },
 });
 
-const ChessGame = mongoose.model<IChessGame>("ChessGame", ChessGameSchema);
-export default ChessGame;
+const ChessGameDB = mongoose.model<IChessGame>("ChessGame", ChessGameSchema);
+export default ChessGameDB;

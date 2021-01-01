@@ -71,6 +71,7 @@ export interface MovePart {
 }
 
 export interface ChessGame {
+  code: string;
   start?: Date;
   end?: Date;
   moves: Move[];

@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import ChessGame, { IChessGame } from "../model/chessGame";
+import ChessGameDB, { IChessGame } from "../model/ChessGameDB";
+import { initialiseGame } from "../model/playChessGame";
 
 export const allGames = (req: Request, res: Response) => {
-  ChessGame.find((err: any, games: IChessGame[]) => {
+  ChessGameDB.find((err: any, games: IChessGame[]) => {
     if (err) {
       res.send("Error!");
     } else {
@@ -12,9 +13,16 @@ export const allGames = (req: Request, res: Response) => {
 };
 
 export const newGame = (req: Request, res: Response) => {
-  const chessGame = new ChessGame({ data: "test test" });
+  // Create a new game
+  const chessGame = initialiseGame();
 
-  chessGame.save((err: any) => {
+  const chessGameDB = new ChessGameDB({
+    data: JSON.stringify(chessGame),
+    code: chessGame.code,
+    start: chessGame.start,
+  });
+
+  chessGameDB.save((err: any) => {
     if (err) {
       res.send(err);
     } else {
@@ -24,29 +32,36 @@ export const newGame = (req: Request, res: Response) => {
 };
 
 export const getGame = (req: Request, res: Response) => {
-  ChessGame.findById(req.params.id, (err: any, game: IChessGame) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(game);
+  ChessGameDB.findOne(
+    { code: req.params.code },
+    (err: any, doc: IChessGame) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(JSON.parse(doc.data));
+      }
     }
-  });
+  );
 };
 
 export const saveGame = (req: Request, res: Response) => {
-  console.log(req.body);
+  //console.log("saveGame", req.body);
+  const chessGame = JSON.parse(req.body);
 
-  const chessGame = new ChessGame(req.body);
-
-  ChessGame.findByIdAndUpdate(req.params.id, chessGame, null, (err: any) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send("Successfully updated book!");
+  ChessGameDB.findOneAndUpdate(
+    { code: req.params.code },
+    chessGame,
+    null,
+    (err: any) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send("Successfully updated book!");
+      }
     }
-  });
+  );
 };
 
-export const makeMove = (req: Request, res: Response) => {
+export const calculateMode = (req: Request, res: Response) => {
   res.send("move");
 };

@@ -20,8 +20,7 @@ app.use(bodyparser.json());
 
 router.route("/game").get(chessController.allGames);
 router.route("/game/new/:name").get(chessController.newGame);
-router.route("/game/:id").get(chessController.getGame);
-router.route("/move").post(chessController.makeMove);
+router.route("/game/:code").get(chessController.getGame);
 router.route("/save").post(chessController.saveGame);
 
 app.listen(app.get("port"), () => {

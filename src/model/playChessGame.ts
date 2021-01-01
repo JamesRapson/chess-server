@@ -19,6 +19,7 @@ const canMovePieceToEscapeCheck = (allPieces: Piece[], piece: Piece) => {
   const possibleMoves = getPossibleMoves(allPieces, piece);
   for (let move of possibleMoves) {
     const game: ChessGame = {
+      code: "temp",
       currentBoard: {
         pieces: allPieces,
       },
@@ -109,6 +110,17 @@ export const getPieceAtPosition = (
   });
 
   return piece || null;
+};
+
+export const newChesssGame = (): ChessGame => {
+  return {
+    code: Math.floor(100000 + Math.random() * 900000).toString(),
+    start: new Date(),
+    moves: [],
+    currentState: "Playing",
+    playersTurn: "White",
+    currentBoard: initialiseBoard(),
+  };
 };
 
 export const initialiseBoard = (): Board => {
@@ -307,6 +319,7 @@ export const initialiseBoard = (): Board => {
 
 export const initialiseGame = () => {
   const game: ChessGame = {
+    code: "temp",
     currentBoard: initialiseBoard(),
     moves: [],
     playersTurn: "White",
